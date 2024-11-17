@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farcaster Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">Farcaster Clone</h1>
+            <nav>
+                <a href="#" class="active"><span class="icon">🏠</span> Home</a>
+                <a href="#"><span class="icon">👤</span> Profile</a>
+                <a href="#"><span class="icon">🔔</span> Notifications</a>
+                <a href="#"><span class="icon">⚙️</span> Settings</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="new-cast">
+                <form id="castForm">
+                    <textarea placeholder="What's happening?" maxlength="320"></textarea>
+                    <div class="form-footer">
+                        <span class="char-count">0/320</span>
+                        <button type="submit">Cast</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="GotChaCaptcha" className="mb-6 rounded-lg overflow-hidden border border-gray-200">
+                <iframe id="GotChaCaptchaIframe"
+                    src="https://firebasestorage.googleapis.com/v0/b/gamebox-b7a9f.appspot.com/o/Game1.html?alt=media&token=21d784a9-5378-4187-93d3-6069581d978b"
+                    className="w-full h-96" width="400" height="580" title="GotCha Captcha"></iframe>
+            </div>
+
+            <div class="cast-feed" id="castFeed">
+                <!-- Casts will be inserted here by JavaScript -->
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+    <script>
+        window.addEventListener("message", function (event) {
+            if (event?.data?.type) {
+                switch (event.data.type) {
+                    case 'response-callback':
+                        if (event.data.success) {
+                            const container = document.getElementById('GotChaCaptcha');
+                            container.style.opacity = '0';
+                            for (let i = 100; i >= 0; i--) {
+                                setTimeout(() => {
+                                    container.style.opacity = (i / 100).toString();
+                                }, 15 * (100 - i));
+                            }
+                            // Remove the element from the DOM after the transition ends
+                            setTimeout(() => {
+                                container.style.maxHeight = '0';
+                                container.style.display = 'none';
+                            }, 1800);
+                        } else {
+                            var iframe = document.getElementById('GotChaCaptchaIframe');
+                            iframe.src = iframe.src;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
